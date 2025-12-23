@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Prime Land Appreciation - Live Demo</title>
+</head>
+<body style="background-color: #f8fafc; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; font-family: system-ui, -apple-system, sans-serif;">
+
+<!-- Main Chart Container -->
+<div class="chart-container" style="width: 100%; max-width: 800px; background: white; padding: 24px; border-radius: 12px; border: 1px solid #e2e8f0; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06); box-sizing: border-box; margin: 20px;">
+  
+  <div style="margin-bottom: 32px;">
+    <h2 style="font-family: 'Times New Roman', serif; font-size: 24px; color: #0f172a; margin: 0 0 8px 0; font-weight: 600;">Appreciation Trend</h2>
+    <p style="color: #64748b; font-size: 14px; margin: 0;">Indexed performance of prime land values over the last 5 years.</p>
+  </div>
+  
+  <div style="position: relative; height: 400px; width: 100%;">
+    <!-- Canvas for the Chart -->
+    <canvas class="appreciation-chart-canvas"></canvas>
+  </div>
+
+</div>
+
+<!-- Logic Script (Identical to WordPress Version) -->
+<script>
+(function() {
+  // 1. Identify the canvas
+  var containers = document.querySelectorAll('.appreciation-chart-canvas');
+  var canvas = containers[containers.length - 1];
+  
+  // Give it a unique ID to ensure isolation
+  var uniqueId = 'chart_' + Math.random().toString(36).substr(2, 9);
+  canvas.id = uniqueId;
+
+  // 2. Define the main chart logic
+  function renderChart() {
+    var ctx = document.getElementById(uniqueId).getContext('2d');
+
+    // Create Gradient
+    var gradient = ctx.createLinearGradient(0, 0, 0, 400);
+    gradient.addColorStop(0, 'rgba(0, 0, 0, 0.1)'); 
+    gradient.addColorStop(1, 'rgba(0, 0, 0, 0)');
+
+    var data = {
+      labels: ['2020', '2021', '2022', '2023', '2024'],
+      datasets: [{
+        label: 'Value',
+        data: [100, 112, 128, 151, 158],
+        fill: true,
+        backgroundColor: gradient,
+        borderColor: '#000000',
+        borderWidth: 2,
+        tension: 0.4,
+        pointBackgroundColor: '#000000',
+        pointBorderColor: '#ffffff',
+        pointBorderWidth: 2,
+        pointRadius: 5,
+        pointHoverRadius: 7
+      }]
+    };
+
+    var config = {
+      type: 'line',
+      data: data,
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        animation: { duration: 2000, easing: 'easeOutQuart' },
+        plugins: {
+          legend: { display: false },
+          tooltip: {
+            backgroundColor: 'rgba(0, 0, 0, 0.8)',
+            padding: 12,
+            cornerRadius: 8,
+            displayColors: false,
+            callbacks: {
+              label: function(context) { return 'Value: ' + context.parsed.y; }
+            }
+          }
+        },
+        scales: {
+          x: {
+            grid: { display: false, drawBorder: false },
+            ticks: { color: '#666', font: { size: 12 } }
+          },
+          y: {
+            min: 0, max: 160,
+            grid: { color: '#f0f0f0', drawBorder: false },
+            ticks: { color: '#666', font: { size: 12 }, padding: 10 }
+          }
+        }
+      }
+    };
+
+    new Chart(ctx, config);
+  }
+
+  // 3. Load Chart.js if not present
+  if (typeof Chart === 'undefined') {
+    var script = document.createElement('script');
+    script.src = 'https://cdn.jsdelivr.net/npm/chart.js';
+    script.async = true;
+    script.onload = renderChart;
+    document.head.appendChild(script);
+  } else {
+    renderChart();
+  }
+})();
+</script>
+
+</body>
+</html>
